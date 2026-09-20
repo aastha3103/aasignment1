@@ -1,69 +1,143 @@
-import Image from "next/image";
+// This is a React Server Component (RSC) — it runs ONLY on the server.
+// It fetches product data on the server and passes serialized props to Client Components.
+// The ProductCard and CartSidebar are 'use client' components that cross the hydration boundary.
 
-export default function Home() {
+import { Suspense } from "react"
+import { getProducts } from "@/lib/products"
+import { ProductCard } from "@/components/product-card"
+import { CartSidebar } from "@/components/cart-sidebar"
+import { Header } from "@/components/header"
+import { Skeleton } from "@/components/ui/skeleton"
+
+// Loading skeleton for product grid (used by Suspense)
+function ProductGridSkeleton() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div key={i} className="rounded-xl border border-border/60 p-6 space-y-4">
+          <Skeleton className="h-32 w-full rounded-xl" />
+          <Skeleton className="h-5 w-3/4" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-1/2" />
+          <div className="flex justify-between items-center pt-2">
+            <Skeleton className="h-8 w-20" />
+            <Skeleton className="h-9 w-28 rounded-md" />
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      ))}
     </div>
-  );
+  )
+}
+
+// Server Component that fetches and renders products
+async function ProductGrid() {
+  // Simulate server-side data fetch delay for Suspense demonstration
+  const products = getProducts()
+
+  return (
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {products.map((product) => (
+        // Props (product) serialize across the RSC → Client Component hydration boundary.
+        // Only JSON-serializable values can cross this boundary.
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </div>
+  )
+}
+
+export default function HomePage() {
+  return (
+    <div className="flex min-h-screen flex-col">
+      <Header />
+      <main className="flex-1">
+        {/* Hero Section */}
+        <section className="relative overflow-hidden border-b border-border/60 bg-gradient-to-br from-background via-background to-muted/30">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent" />
+          <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+            <div className="max-w-2xl">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border/60 bg-muted/50 px-3 py-1 text-xs font-medium text-muted-foreground">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+                </span>
+                Next.js App Router + Server Components
+              </div>
+              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+                Assignment 1{" "}
+                <span className="text-muted-foreground">TechStore</span>
+              </h1>
+              <p className="mt-4 text-lg text-muted-foreground leading-relaxed max-w-lg">
+                A fully functional e-commerce interface demonstrating RSC architecture, 
+                Zustand client state, shadcn/ui primitives, and type-safe Server Actions with Zod validation.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Architecture Info Bar */}
+        <section className="border-b border-border/60 bg-muted/30">
+          <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+              <div className="text-center">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Component</p>
+                <p className="mt-1 text-sm font-semibold">RSC + Client</p>
+              </div>
+              <div className="text-center">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">State</p>
+                <p className="mt-1 text-sm font-semibold">Zustand</p>
+              </div>
+              <div className="text-center">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Validation</p>
+                <p className="mt-1 text-sm font-semibold">Zod Schema</p>
+              </div>
+              <div className="text-center">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Mutation</p>
+                <p className="mt-1 text-sm font-semibold">Server Action</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Products + Cart */}
+        <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold tracking-tight">Products</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Browse our selection and add items to your cart. Cart state persists across page reloads via Zustand + localStorage.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_340px]">
+            {/* Suspense boundary wraps the server-fetched product grid */}
+            <Suspense fallback={<ProductGridSkeleton />}>
+              <ProductGrid />
+            </Suspense>
+
+            {/* Cart sidebar — client component with Zustand state */}
+            <div className="order-first lg:order-last">
+              <CartSidebar />
+            </div>
+          </div>
+        </section>
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t border-border/60 bg-muted/30">
+        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+            <p className="text-sm text-muted-foreground">
+              Assignment 1 — FST Course | Next.js App Router Architecture
+            </p>
+            <div className="flex gap-4 text-xs text-muted-foreground">
+              <span>RSC Hydration</span>
+              <span>•</span>
+              <span>Zustand Persistence</span>
+              <span>•</span>
+              <span>Server Actions</span>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  )
 }
