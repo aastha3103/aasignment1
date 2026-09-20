@@ -1,8 +1,8 @@
 import { Resend } from "resend"
 import { prisma } from "@/lib/prisma"
 import { render } from "@react-email/components"
-import { WelcomeEmail } from "@/emails/welcome"
-import { TransactionAlertEmail } from "@/emails/transaction-alert"
+import { WelcomeEmail } from "../emails/welcome"
+import { TransactionAlertEmail } from "../emails/transaction-alert"
 
 const resendApiKey = process.env.RESEND_API_KEY || "re_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 export const resend = new Resend(resendApiKey)
