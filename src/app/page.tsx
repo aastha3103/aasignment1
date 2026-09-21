@@ -50,53 +50,7 @@ export default function HomePage() {
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
-        {/* Hero Section */}
-        <section className="relative overflow-hidden border-b border-border/60 bg-gradient-to-br from-background via-background to-muted/30">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent" />
-          <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-            <div className="max-w-2xl">
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border/60 bg-muted/50 px-3 py-1 text-xs font-medium text-muted-foreground">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
-                </span>
-                Next.js App Router + Server Components
-              </div>
-              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-                Assignment 1{" "}
-                <span className="text-muted-foreground">TechStore</span>
-              </h1>
-              <p className="mt-4 text-lg text-muted-foreground leading-relaxed max-w-lg">
-                A fully functional e-commerce interface demonstrating RSC architecture, 
-                Zustand client state, shadcn/ui primitives, and type-safe Server Actions with Zod validation.
-              </p>
-            </div>
-          </div>
-        </section>
 
-        {/* Architecture Info Bar */}
-        <section className="border-b border-border/60 bg-muted/30">
-          <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              <div className="text-center">
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Component</p>
-                <p className="mt-1 text-sm font-semibold">RSC + Client</p>
-              </div>
-              <div className="text-center">
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">State</p>
-                <p className="mt-1 text-sm font-semibold">Zustand</p>
-              </div>
-              <div className="text-center">
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Validation</p>
-                <p className="mt-1 text-sm font-semibold">Zod Schema</p>
-              </div>
-              <div className="text-center">
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Mutation</p>
-                <p className="mt-1 text-sm font-semibold">Server Action</p>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* Products + Cart */}
         <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">

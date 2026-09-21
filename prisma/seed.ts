@@ -1,6 +1,7 @@
 import "dotenv/config"
 import { PrismaClient } from "../src/generated/prisma/client"
 import { faker } from "@faker-js/faker"
+import { hashPassword } from "better-auth/crypto"
 
 const prisma = new PrismaClient()
 
@@ -32,6 +33,8 @@ async function main() {
 
   console.log("   ✅ Cleared existing data")
 
+  const hashedPassword = await hashPassword("password123")
+
   // 1. Create Admin User
   const adminUser = await prisma.user.create({
     data: {
@@ -43,7 +46,7 @@ async function main() {
         create: {
           accountId: "admin-account-1",
           providerId: "credential",
-          password: "password123", // In real app, hashed by Better Auth
+          password: hashedPassword,
         },
       },
     },
@@ -71,7 +74,7 @@ async function main() {
           create: {
             accountId: `account-${i + 2}`,
             providerId: "credential",
-            password: "password123",
+            password: hashedPassword,
           },
         },
       },
